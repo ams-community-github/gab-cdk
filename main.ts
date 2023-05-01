@@ -11,7 +11,7 @@ class GabStack extends TerraformStack {
 
     const env = process.env.ENV || 'dev'; 
 
-    new AzurermProvider(this, "azure", {
+    new AzurermProvider(this, "azurerm", {
       features: {
         resourceGroup: {
           preventDeletionIfContainsResources: false
@@ -31,7 +31,7 @@ class GabStack extends TerraformStack {
       location: "westeurope",
     });
 
-    
+
   }
 }
 
