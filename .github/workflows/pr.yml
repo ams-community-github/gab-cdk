@@ -32,7 +32,7 @@ jobs:
         uses: hashicorp/terraform-cdk-action@v0.1.0
         with:
           terraformVersion: 1.4.4
-          cdktfVersion: 0.15.5
+          cdktfVersion: 0.16.1
           stackName: gab-cdk
           mode: plan-only
           githubToken: ${{ secrets.GITHUB_TOKEN }}
