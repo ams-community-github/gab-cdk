@@ -6,6 +6,13 @@ permissions:
   contents: read
   pull-requests: write
 
+env:
+  ARM_ACCESS_KEY: "${{ secrets.ARM_ACCESS_KEY }}"
+  ARM_CLIENT_ID: "${{ secrets.ARM_CLIENT_ID }}"
+  ARM_CLIENT_SECRET: "${{ secrets.ARM_CLIENT_SECRET }}"
+  ARM_SUBSCRIPTION_ID: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
+  ARM_TENANT_ID: "${{ secrets.ARM_TENANT_ID }}"
+
 jobs:
   terraform:
     name: "Terraform CDK Diff"
@@ -32,3 +39,4 @@ jobs:
           stackName: gab-cdk
           mode: plan-only
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+        env:
