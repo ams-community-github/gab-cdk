@@ -22,13 +22,13 @@ jobs:
         run: npm install
 
       - name: Generate module and provider bindings
-        run: npx cdktf-cli get
+        run: npm run get
 
       - name: Run Terraform CDK
         uses: hashicorp/terraform-cdk-action@v0.1.0
         with:
           terraformVersion: 1.4.4
-          cdktfVersion: 0.16.1
+          cdktfVersion: 0.15.5
           stackName: gab-cdk
           mode: plan-only
           githubToken: ${{ secrets.GITHUB_TOKEN }}
