@@ -39,4 +39,3 @@ jobs:
           stackName: gab-cdk
           mode: plan-only
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-        env:
