@@ -1,0 +1,18 @@
+{
+  "language": "typescript",
+  "app": "npx ts-node main.ts",
+  "projectId": "71f897da-daa0-4d77-bb68-f754aa1bbc0f",
+  "sendCrashReports": "true",
+  "terraformProviders": [],
+  "terraformModules": [
+    {
+      "name": "naming",
+      "source": "Azure/naming/azurerm",
+      "version": "0.2.0"
+    }
+  ],
+  "context": {
+    "excludeStackIdFromLogicalIds": "true",
+    "allowSepCharsInLogicalIds": "true"
+  }
+}
