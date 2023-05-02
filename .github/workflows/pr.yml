@@ -58,6 +58,10 @@ jobs:
         name: Setup TFLint
         with:
           tflint_version: v0.46.1
+      - name: Init TFLint
+        run: tflint --init
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Lint with tflint
         run: |
           tflint --init
