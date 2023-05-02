@@ -63,9 +63,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Lint with tflint
-        run: |
-          tflint --init
-          tflint --format sarif > tflint.sarif
+        run: tflint --format sarif > tflint.sarif
       - name: Upload to Github Code Scanning
         uses: github/codeql-action/upload-sarif@v2
         with:
