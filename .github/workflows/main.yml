@@ -18,22 +18,46 @@ env:
   ARM_TENANT_ID: "${{ secrets.ARM_TENANT_ID }}"
 
 jobs:
-  terraform:
-    name: "Terraform CDK Deploy"
+  terraform-synth:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: 18
+          cache: "npm"
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
+
+      - name: Generate module and provider bindings
+        run: npm run get
+
+      - name: Synthethize
+        run: npm run synth
+
+      - name: Archive cloud formation
+        uses: actions/upload-artifact@v3
+        with:
+          name: tf
+          path: cdktf.out/stacks/gab-cdk/cdk.tf.json
+
+  terraform-deploy:
+    needs: terraform-synth
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "npm"
+      - name: Download Terraform Synth
+        uses: actions/download-artifact@v3
+        with:
+          name: tf
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Generate module and provider bindings
         run: npm run get
