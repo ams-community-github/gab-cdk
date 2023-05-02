@@ -17,15 +17,14 @@ jobs:
   terraform-synth:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: 18
+          cache: "npm"
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Generate module and provider bindings
         run: npm run get
@@ -41,15 +40,24 @@ jobs:
 
   tf-lint:
     needs: terraform-synth
-    runs-on: ghcr.io/terraform-linters/tflint-bundle:latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
-      - name: Download Cloudformation template
+      - name: Download Terraform Synth
         uses: actions/download-artifact@v3
         with:
           name: tf
           path: ./
+      - uses: actions/cache@v3
+        name: Cache plugin dir
+        with:
+          path: ~/.tflint.d/plugins
+          key: ${{ matrix.os }}-tflint-${{ hashFiles('.tflint.hcl') }}
+      - uses: terraform-linters/setup-tflint@v3
+        name: Setup TFLint
+        with:
+          tflint_version: v0.46.1
       - name: Lint with tflint
         run: |
           tflint --init
@@ -66,7 +74,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Download Cloudformation template
+      - name: Download Terraform Synth
         uses: actions/download-artifact@v3
         with:
           name: tf
@@ -88,15 +96,18 @@ jobs:
     needs: [tf-lint, tf-sec]
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: 18
+          cache: "npm"
+      - name: Download Terraform Synth
+        uses: actions/download-artifact@v3
+        with:
+          name: tf
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Generate module and provider bindings
         run: npm run get
