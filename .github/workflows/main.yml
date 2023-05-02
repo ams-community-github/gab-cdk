@@ -1,0 +1,48 @@
+name: "Apply Stack after PR is Merged"
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: read
+
+env:
+  ARM_ACCESS_KEY: "${{ secrets.ARM_ACCESS_KEY }}"
+  ARM_CLIENT_ID: "${{ secrets.ARM_CLIENT_ID }}"
+  ARM_CLIENT_SECRET: "${{ secrets.ARM_CLIENT_SECRET }}"
+  ARM_SUBSCRIPTION_ID: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
+  ARM_TENANT_ID: "${{ secrets.ARM_TENANT_ID }}"
+
+jobs:
+  terraform:
+    name: "Terraform CDK Deploy"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate module and provider bindings
+        run: npm run get
+
+      - name: Run Terraform CDK
+        uses: hashicorp/terraform-cdk-action@v0.1.0
+        with:
+          terraformVersion: 1.4.4
+          cdktfVersion: 0.15.5
+          stackName: gab-cdk
+          mode: auto-approve-apply
+          githubToken: ${{ secrets.GITHUB_TOKEN }}

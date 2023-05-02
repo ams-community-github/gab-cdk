@@ -14,8 +14,78 @@ env:
   ARM_TENANT_ID: "${{ secrets.ARM_TENANT_ID }}"
 
 jobs:
+  terraform-synth:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate module and provider bindings
+        run: npm run get
+
+      - name: Synthethize
+        run: npm run synth
+
+      - name: Archive cloud formation
+        uses: actions/upload-artifact@v3
+        with:
+          name: tf
+          path: cdktf.out/stacks/gab-cdk/cdk.tf.json
+
+  tf-lint:
+    needs: terraform-synth
+    runs-on: ghcr.io/terraform-linters/tflint-bundle:latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download Cloudformation template
+        uses: actions/download-artifact@v3
+        with:
+          name: tf
+          path: ./
+      - name: Lint with tflint
+        run: |
+          tflint --init
+          tflint --format sarif > tflint.sarif
+      - name: Upload to Github Code Scanning
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: tflint.sarif
+          category: tflint
+
+  tf-sec:
+    needs: terraform-synth
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download Cloudformation template
+        uses: actions/download-artifact@v3
+        with:
+          name: tf
+          path: ./
+      - name: tfsec
+        uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
+        with:
+          tfsec_formats: sarif
+          tfsec_args: --exclude-downloaded-modules --out "tfsec.sarif"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload to Github Code Scanning
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: results-dir/tfsec.sarif
+          category: tfsec
+
   terraform:
     name: "Terraform CDK Diff"
+    needs: [tf-lint, tf-sec]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
