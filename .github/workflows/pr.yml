@@ -36,7 +36,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: tf
-          path: cdktf.out/stacks/gab-cdk/cdk.tf.json
+          path: cdktf.out/stacks/gab-cdk-dev/cdk.tf.json
 
   tf-lint:
     needs: terraform-synth

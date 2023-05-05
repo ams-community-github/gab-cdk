@@ -40,11 +40,12 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: tf
-          path: cdktf.out/stacks/gab-cdk/cdk.tf.json
+          path: cdktf.out/stacks
 
-  terraform-deploy:
+  terraform-deploy-dev:
     needs: terraform-synth
     runs-on: ubuntu-latest
+    environment: development
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -67,6 +68,36 @@ jobs:
         with:
           terraformVersion: 1.4.4
           cdktfVersion: 0.15.5
-          stackName: gab-cdk
+          stackName: gab-cdk-dev
+          mode: auto-approve-apply
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+  terraform-deploy-rec:
+    needs: terraform-deploy-dev
+    runs-on: ubuntu-latest
+    environment: recette
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "npm"
+      - name: Download Terraform Synth
+        uses: actions/download-artifact@v3
+        with:
+          name: tf
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate module and provider bindings
+        run: npm run get
+
+      - name: Run Terraform CDK
+        uses: hashicorp/terraform-cdk-action@v0.1.0
+        with:
+          terraformVersion: 1.4.4
+          cdktfVersion: 0.15.5
+          stackName: gab-cdk-rec
           mode: auto-approve-apply
           githubToken: ${{ secrets.GITHUB_TOKEN }}
