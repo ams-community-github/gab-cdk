@@ -115,6 +115,6 @@ jobs:
         with:
           terraformVersion: 1.4.4
           cdktfVersion: 0.15.5
-          stackName: gab-cdk
+          stackName: gab-cdk-dev
           mode: plan-only
           githubToken: ${{ secrets.GITHUB_TOKEN }}

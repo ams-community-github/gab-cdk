@@ -43,8 +43,7 @@ class GabStack extends TerraformStack {
     
     const rg = new ResourceGroup(this, "gab_rg", {
       name: `\${module.naming.resource_group.name}`,
-      location,
-      tags: defaultTags
+      location
     });
 
     const storageAccount = new StorageAccount(this, "gab_storage_account", {
@@ -68,7 +67,6 @@ class GabStack extends TerraformStack {
       name:`\${module.naming.app_service_plan.name}`,
       resourceGroupName: rg.name,
       location,
-      tags: defaultTags,
       storageAccountName: storageAccount.name,
       storageAccountAccessKey: storageAccount.primaryAccessKey,
       servicePlanId: servicePlan.id,
