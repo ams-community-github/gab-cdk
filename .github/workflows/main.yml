@@ -64,7 +64,7 @@ jobs:
         run: npm run get
 
       - name: Run Terraform CDK
-        uses: hashicorp/terraform-cdk-action@v0.1.0
+        uses: hashicorp/terraform-cdk-action@v0.1.16
         with:
           terraformVersion: 1.4.4
           cdktfVersion: 0.15.5
@@ -94,7 +94,7 @@ jobs:
         run: npm run get
 
       - name: Run Terraform CDK
-        uses: hashicorp/terraform-cdk-action@v0.1.0
+        uses: hashicorp/terraform-cdk-action@v0.1.16
         with:
           terraformVersion: 1.4.4
           cdktfVersion: 0.15.5

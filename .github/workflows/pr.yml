@@ -78,7 +78,7 @@ jobs:
           name: tf
           path: ./
       - name: tfsec
-        uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
+        uses: aquasecurity/tfsec-pr-commenter-action@v1.3.1
         with:
           tfsec_formats: sarif
           tfsec_args: --exclude-downloaded-modules
@@ -111,7 +111,7 @@ jobs:
         run: npm run get
 
       - name: Run Terraform CDK
-        uses: hashicorp/terraform-cdk-action@v0.1.0
+        uses: hashicorp/terraform-cdk-action@v0.1.16
         with:
           terraformVersion: 1.4.4
           cdktfVersion: 0.15.5

@@ -40,7 +40,7 @@ class GabStack extends TerraformStack {
       prefix: [prefix],
       suffix: [`${environment}`]
     });
-    
+
     const rg = new ResourceGroup(this, "gab_rg", {
       name: `\${module.naming.resource_group.name}`,
       location
@@ -53,7 +53,6 @@ class GabStack extends TerraformStack {
       accountTier: "Standard",
       accountReplicationType: "LRS"
     });
-
     
     const servicePlan = new GabServicePlan(this, "gab_service_plan", {
       name:`\${module.naming.app_service_plan.name}`,
