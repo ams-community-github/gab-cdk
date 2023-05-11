@@ -78,7 +78,7 @@ jobs:
           name: tf
           path: ./
       - name: tfsec
-        uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
+        uses: aquasecurity/tfsec-pr-commenter-action@v1.3.1
         with:
           tfsec_formats: sarif
           tfsec_args: --exclude-downloaded-modules
