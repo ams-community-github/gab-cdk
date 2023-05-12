@@ -22,7 +22,7 @@ class GabStack extends TerraformStack {
     const defaultTags = {
       environment,
       owner: 'GAB',
-      project: 'GAB-Rennes'
+      project: 'GAB-Paris'
     }
     const prefix = 'gab';
 
